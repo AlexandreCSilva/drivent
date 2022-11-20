@@ -5,17 +5,23 @@ import httpStatus from "http-status";
 
 export async function postCreateTicket(req: AuthenticatedRequest, res: Response) {
   try {
-    await ticketsService.createTicket(req.body.ticketTypeId);
+    /* const validEnrollment = await ticketsService.validateUserEnrollmentTicket();
 
-    return res.sendStatus(httpStatus.OK);
+    if (validEnrollment.Enrollment.length == 0) {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    } */
+
+    const response = await ticketsService.createTicket(req.body.ticketTypeId);
+
+    return res.status(httpStatus.CREATED).send(response);
   } catch (error) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
 
-export async function getTicketsWithTypes(req: AuthenticatedRequest, res: Response) {
+export async function getTicketsTypes(req: AuthenticatedRequest, res: Response) {
   try {
-    const result = await ticketsService.getTicketsType();
+    const result = await ticketsService.getTicketsType(req.userId);
 
     return res.status(httpStatus.OK).send(result);
   } catch (error) {
@@ -25,14 +31,13 @@ export async function getTicketsWithTypes(req: AuthenticatedRequest, res: Respon
 
 export async function getTickets(req: AuthenticatedRequest, res: Response) {
   try {
-    const result = await ticketsService.getTickets();
+    const result = await ticketsService.getTickets(req.userId);
 
-    if (!result) {
-      return res.sendStatus(httpStatus.NOT_FOUND);
-    }
-    console.log(result);
     return res.send(result).status(httpStatus.OK);
   } catch (error) {
+    if (error.name == "NotFoundError") {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }

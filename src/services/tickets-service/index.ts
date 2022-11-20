@@ -1,35 +1,20 @@
-import { AddressEnrollment } from "@/protocols";
-import { getAddress } from "@/utils/cep-service";
 import { notFoundError } from "@/errors";
-import addressRepository, { CreateAddressParams } from "@/repositories/address-repository";
-import enrollmentRepository, { CreateEnrollmentParams } from "@/repositories/enrollment-repository";
-import { exclude } from "@/utils/prisma-utils";
-import { Address, Enrollment } from "@prisma/client";
 import ticketRepository from "@/repositories/tickets-repository";
 
-type GetAddressResult = Omit<Address, "createdAt" | "updatedAt" | "enrollmentId">;
-
-async function createTicket(tickedTypeId: number) {
-  const validType = await ticketRepository.validTicketType((tickedTypeId));
-
-  /* const enrollment = exclude(params, "address");
-
-  const result = await;
-  if (result.error) {
-    throw notFoundError();
-  }
-
-  const newEnrollment = await enrollmentRepository.upsert(params.userId, enrollment, exclude(enrollment, "userId"));
-
-  await addressRepository.upsert(newEnrollment.id, address, address); */
+async function createTicket(ticketTypeId: number) {
+  return ticketRepository.createTicket(ticketTypeId);
 }
 
-async function getTicketsType() {
+async function getTicketsType(userId: number) {
   return await ticketRepository.getTicketsTypes();
 }
 
-async function getTickets() {
-  return await ticketRepository.getTickets();
+async function getTickets(userId: number) {
+  const tickets =  await ticketRepository.getTickets(userId);
+
+  if (!tickets) throw notFoundError();
+
+  return tickets;
 }
 
 const ticketsService = {
