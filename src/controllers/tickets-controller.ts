@@ -5,16 +5,15 @@ import httpStatus from "http-status";
 
 export async function postCreateTicket(req: AuthenticatedRequest, res: Response) {
   try {
-    /* const validEnrollment = await ticketsService.validateUserEnrollmentTicket();
-
-    if (validEnrollment.Enrollment.length == 0) {
-      return res.sendStatus(httpStatus.NOT_FOUND);
-    } */
-
-    const response = await ticketsService.createTicket(req.body.ticketTypeId);
+    const response = await ticketsService.createTicket(req.body.ticketTypeId, req.userId);
+    console.log(response);
 
     return res.status(httpStatus.CREATED).send(response);
   } catch (error) {
+    if (error.name == "NotFoundError") {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
@@ -38,6 +37,7 @@ export async function getTickets(req: AuthenticatedRequest, res: Response) {
     if (error.name == "NotFoundError") {
       return res.sendStatus(httpStatus.NOT_FOUND);
     }
+
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
