@@ -22,3 +22,17 @@ export async function getTicketsWithTypes(req: AuthenticatedRequest, res: Respon
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
+
+export async function getTickets(req: AuthenticatedRequest, res: Response) {
+  try {
+    const result = await ticketsService.getTickets();
+
+    if (!result) {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    }
+    console.log(result);
+    return res.send(result).status(httpStatus.OK);
+  } catch (error) {
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+}
