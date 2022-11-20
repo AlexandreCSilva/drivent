@@ -6,7 +6,7 @@ async function createTicket(ticketTypeId: number) {
 }
 
 async function getTicketsType(userId: number) {
-  return await ticketRepository.getTicketsTypes();
+  return await ticketRepository.getTicketsTypes(userId);
 }
 
 async function getTickets(userId: number) {

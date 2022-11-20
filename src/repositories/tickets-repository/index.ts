@@ -1,8 +1,16 @@
 import { prisma } from "@/config";
 
-async function getTicketsTypes() {
+async function getTicketsTypes(userId: number) {
   return prisma.ticketType.findMany({
-        
+    where: {
+      Ticket: {
+        every: {
+          Enrollment: {
+            userId: userId
+          }
+        }
+      }
+    }
   });
 }
 
