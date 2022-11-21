@@ -1,5 +1,6 @@
 import { prisma } from "@/config";
 import { newTicket } from "@/schemas";
+import { number } from "joi";
 
 async function getTicketsTypes(userId: number) {
   return prisma.ticketType.findMany({
@@ -28,15 +29,21 @@ async function getTickets(userId: number) {
   });
 }
 
-async function createTicket(enrollmentId: number, ticketTypeId: number) {
-  const result = await prisma.ticket.create({
-    data: {
+async function upsertTicket(enrollmentId: number, ticketTypeId: number, ticketId: number) {
+  const result = await prisma.ticket.upsert({
+    where: {
+      id: ticketId
+    },
+    create: {
       ticketTypeId: ticketTypeId,
       enrollmentId: enrollmentId,
       status: "RESERVED",
-      createdAt: Date.now() as unknown as Date,
-      updatedAt: Date.now() as unknown as Date,
-    }
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    },
+    update: {
+      status: "PAID"
+    },
   });
 
   return result;
@@ -61,7 +68,7 @@ async function getTicketTypeById(ticketTypeId: number) {
 const ticketRepository = {
   getTicketsTypes,
   getTickets,
-  createTicket,
+  upsertTicket,
   getTicketById,
   getTicketTypeById
 };

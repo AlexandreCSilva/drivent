@@ -32,9 +32,11 @@ async function postPayments(bodyPayment: bodyPaymentType, userId: number) {
   const ticketType = await ticketRepository.getTicketTypeById(ticket.ticketTypeId);
 
   if (!ticketType) throw notFoundError();
-  const result =await paymentsRepository.postPayments(bodyPayment, ticketType.price);
+
+  const result = await paymentsRepository.postPayments(bodyPayment, ticketType.price);
+
+  await ticketRepository.upsertTicket(enrollment.id, ticketType.id, ticket.id);
   
-  console.log(result);
   return result;
 }
 
