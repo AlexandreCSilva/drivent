@@ -11,15 +11,16 @@ export async function getPayments(req: AuthenticatedRequest, res: Response) {
   const ticketId = parseFloat(req.query.ticketId as string);
 
   try {
-    /*  const validTicketId = await paymentsService.validTicketId(ticketId);
+    const result = await paymentsService.getPayments(ticketId, req.userId);
 
-        if (!validTicketId) {
-            return res.sendStatus(httpStatus.NOT_FOUND);
-        }
- 
-        console.log(validTicketId) */
-    return res.sendStatus(httpStatus.OK);
+    return res.send(result).status(httpStatus.OK);
   } catch (error) {
+    if (error.name == "NotFoundError") {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    } else if (error.name == "UnauthorizedError") {
+      return res.sendStatus(httpStatus.UNAUTHORIZED);
+    }
+    
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }

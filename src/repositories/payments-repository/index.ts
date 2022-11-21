@@ -1,8 +1,11 @@
 import { prisma } from "@/config";
 
-async function getPayments() {
-  prisma.ticket.
-    return;
+async function getPayments(ticketId: number) {
+  return prisma.payment.findFirst({
+    where: {
+      ticketId: ticketId
+    }
+  });
 }
 
 const paymentsRepository = {
