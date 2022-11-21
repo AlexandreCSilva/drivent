@@ -50,11 +50,20 @@ async function getTicketById(ticketId: number) {
   });
 }
 
+async function getTicketTypeById(ticketTypeId: number) {
+  return await prisma.ticketType.findUnique({
+    where: {
+      id: ticketTypeId
+    }
+  });
+}
+
 const ticketRepository = {
   getTicketsTypes,
   getTickets,
   createTicket,
-  getTicketById
+  getTicketById,
+  getTicketTypeById
 };
 
 export default ticketRepository;

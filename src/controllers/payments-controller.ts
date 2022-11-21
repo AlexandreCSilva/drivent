@@ -24,3 +24,23 @@ export async function getPayments(req: AuthenticatedRequest, res: Response) {
     return res.sendStatus(httpStatus.BAD_REQUEST);
   }
 }
+
+export async function postPayments(req: AuthenticatedRequest, res: Response) {
+  if (!req.body.ticketId || !req.body.cardData) {
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+
+  try {
+    const result = await paymentsService.postPayments(req.body, req.userId);
+
+    return res.send(result).status(httpStatus.OK);
+  } catch (error) {
+    if (error.name == "NotFoundError") {
+      return res.sendStatus(httpStatus.NOT_FOUND);
+    } else if (error.name == "UnauthorizedError") {
+      return res.sendStatus(httpStatus.UNAUTHORIZED);
+    }
+    
+    return res.sendStatus(httpStatus.BAD_REQUEST);
+  }
+}
