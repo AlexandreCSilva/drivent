@@ -6,7 +6,6 @@ import httpStatus from "http-status";
 export async function postCreateTicket(req: AuthenticatedRequest, res: Response) {
   try {
     const response = await ticketsService.createTicket(req.body.ticketTypeId, req.userId);
-    console.log(response);
 
     return res.status(httpStatus.CREATED).send(response);
   } catch (error) {

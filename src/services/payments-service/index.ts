@@ -1,8 +1,7 @@
 import { notFoundError, unauthorizedError } from "@/errors";
 import enrollmentRepository from "@/repositories/enrollment-repository";
-import paymentsRepository from "@/repositories/payments-repository";
+import paymentsRepository, { bodyPaymentType } from "@/repositories/payments-repository";
 import ticketRepository from "@/repositories/tickets-repository";
-import { bodyPaymentType } from "@/schemas/payment-schemas";
 
 async function getPayments(ticketId: number, userId: number) {
   const validTicketId = await ticketRepository.getTicketById(ticketId);

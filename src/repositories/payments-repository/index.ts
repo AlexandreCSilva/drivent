@@ -1,5 +1,4 @@
 import { prisma } from "@/config";
-import { bodyPaymentType } from "@/schemas/payment-schemas";
 import { Payment } from "@prisma/client";
 
 async function getPayments(ticketId: number) {
@@ -23,6 +22,19 @@ async function postPayments(bodyPayment: bodyPaymentType, valor: number) {
   return prisma.payment.create({
     data: payment
   });
+}
+
+type cardDataType = {
+  issuer: string,
+  number: string,
+  name: string,
+  expirationDate: string,
+  cvv: number,
+}
+
+export type bodyPaymentType = {
+  ticketId: number,
+  cardData: cardDataType
 }
 
 const paymentsRepository = {

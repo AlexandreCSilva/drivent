@@ -1,6 +1,4 @@
 import { prisma } from "@/config";
-import { newTicket } from "@/schemas";
-import { number } from "joi";
 
 async function getTicketsTypes(userId: number) {
   return prisma.ticketType.findMany({
